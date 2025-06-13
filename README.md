@@ -67,94 +67,32 @@ La arquitectura del sistema combina herramientas de procesamiento de lenguaje na
 - 📊 **ReportesPostgreSQL (Cloud SQL)**: Contiene los registros estructurados provenientes del INEI y otras fuentes oficiales.
 - 📈 **GraficosEstadisticos (Cloud Storage)**: Servicio que genera y almacena gráficos dinámicos en tiempo real, los cuales son devueltos al usuario según su consulta.
 
-
 Esta integración permite que cada sesión de usuario se ejecute en tiempo real, combinando procesamiento de lenguaje, recuperación aumentada (RAG), consulta estructurada con SQL y generación visual, todo en una arquitectura serverless sobre Google Cloud Platform.
 
+## 1. Carga de Datos Estructurados desde el INEI
 
+![Flujo de creación de ReportesPostgreSQL](Imagenes%20arquitectura/POSTGREST1.png)
 
+Se parte de un archivo Excel que contiene datos estadísticos oficiales del **INEI** sobre feminicidios contra la mujer en el Perú entre **2015 y 2023**. Este archivo se procesa para:
 
+- Crear las tablas necesarias en PostgreSQL.
+- Almacenar la información estructurada en una instancia de **Cloud SQL** en **Google Cloud Platform (GCP)**.
 
-El agente opera empleando dos herramientas fundamentales:
+Esto permite realizar consultas SQL eficientes y tener una fuente confiable y cuantificable de datos.
 
-- **Metadata**: Herramienta que recibe una pregunta del usuario y se encarga de identificar los metadatos presentes en ella, con el fin de realizar un primer filtrado entre todos los documentos.
-- **RAG (Retrieval-Augmented Generation)**: Combina las capacidades generativas de un modelo de lenguaje con la recuperación de fragmentos desde la base vectorial, lo que permite generar respuestas más precisas, fundamentadas en datos reales y actualizados.
+## 2. Construcción del sistema RAG con noticias digitales
 
-> ⚠️ El agente **no genera información desde cero**, sino que se apoya en noticias reales previamente procesadas, lo que garantiza que las respuestas estén ancladas en evidencia concreta.
+En paralelo, se implementó un pipeline basado en **web scraping** para extraer noticias de medios como *Perú21, El Comercio, Correo* y *Exitosa*, enfocadas en violencia de género.
 
-Finalmente, el sistema se despliega en **Vercel**, donde puede ser accedido por usuarios con dominio `@alum.up.edu.pe`, facilitando su uso académico o institucional.
+![Flujo de creación del sistema RAG](Imagenes%20arquitectura/RAG.png)
 
+El proceso incluye:
 
+- Extracción de noticias y metadatos (título, texto, fecha, distrito, departamento).
+- Fragmentación semántica del contenido.
+- Vectorización con OpenAI (`text-embedding-ada-002`).
+- Enriquecimiento con palabras clave mediante técnicas de **stopwords** y **stemming**.
+- Almacenamiento en una base **vectorial Elasticsearch** en GCP.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🗂️ Flujo Conversacional
-
-1. **Recepción de la consulta del usuario**  
-   Ejemplo: “¿Cuántos casos de feminicidio ocurrieron en Lima Este el último mes?”
-
-2. **Identificación de metadatos en la consulta**  
-   Se detectan elementos como: rango de fechas, periódico, tipo de violencia, distrito, etc. Si alguno de estos campos no está presente, se omite del filtrado.
-
-3. **Recuperación de fragmentos relevantes (RAG)**  
-   Usando tanto la consulta como los metadatos, se accede a la base vectorial y se recuperan los textos más semánticamente relevantes.
-
-4. **Generación de respuesta final**  
-   El modelo genera una respuesta coherente y respaldada por datos provenientes de noticias reales.
-
-5. **Interacción continua**  
-   El usuario puede realizar nuevas preguntas, profundizar en un tema específico o reformular su consulta.
-
-## 🏗️ Arquitectura de la Solución
-
-### 🔄 Integración LangGraph + GCP
-
-Describe el flujo entre el cliente, los servicios en la nube y el sistema RAG.
-
-#### Cliente
-
-- **Inicio de sesión con Google**: Autenticación mediante cuenta institucional.
-- **ChatGPT + Vercel**: Interfaz conversacional desplegada en la nube.
-- **App-Noticias (Cloud Run)**: Microservicio para procesar consultas.
-- **Metadatos**: Se extraen de la consulta del usuario.
-- **PostgreSQL (Cloud SQL)**: Almacena el historial de interacción por sesión.
-- **ElasticSearch (Compute Engine)**: Realiza búsquedas semánticas sobre los documentos indexados.
-
-## 🧱 Flujo de Creación de RAG
-
-Proceso para preparar los datos que alimentan el sistema de recuperación:
-
-1. **Extracción vía web scraping**  
-   Recopilación de artículos de medios peruanos (El Comercio, RPP, Expreso, etc.).
-
-2. **Fragmentación mediante división recursiva por separadores**  
-   Divide los textos en fragmentos más pequeños para facilitar su vectorización.
-
-3. **Vectorización**  
-   Utiliza el modelo `text-embedding-ada-002` de OpenAI para convertir los fragmentos en vectores semánticos.
-
-4. **Almacenamiento con GCP**  
-   Los vectores se almacenan en **ElasticSearch** para su posterior consulta en tiempo real.
-
----
-
-**🔗 Acceso restringido:** el agente está disponible para cuentas con dominio `@alum.up.edu.pe`.
+Este flujo permite consultas semánticas para responder preguntas complejas basadas en contexto textual.
 
