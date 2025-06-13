@@ -94,3 +94,39 @@ El proceso incluye:
 
 Este flujo permite consultas semánticas para responder preguntas complejas basadas en contexto textual.
 
+## Instrucciones de despliegue del Microservicio para Cloud Run
+
+### 🔧 Requisitos previos
+
+- Tener instalado y autenticado el SDK de Google Cloud (`gcloud`)
+- Haber creado un proyecto en GCP y haber habilitado las siguientes servicios:
+  - Cloud Run API
+  - Instancia de VM
+  - PostgreSQL
+  - Cloud storage
+
+### Archivos y carpetas requeridas
+A continuación se describen los archivos y carpetas que conforman el microservicio desplegado en **Google Cloud Run**, encargado de procesar consultas sobre violencia de género mediante herramientas de NLP, recuperación de información y generación de gráficos.
+
+| Archivo / Carpeta    | Descripción |
+|----------------------|-------------|
+| `app.py`             | Archivo principal del microservicio. Contiene la lógica de la aplicación, incluyendo procesamiento de solicitudes, uso del agente y herramientas. |
+| `Dockerfile`         | Archivo que define la imagen Docker. Establece el entorno base, las instrucciones de instalación y el comando de arranque de la app. |
+| `requirements.txt`   | Lista de librerías y dependencias necesarias para ejecutar la aplicación. Se usan al construir la imagen Docker. |
+| `credenciales/`      | Carpeta donde se almacenan archivos sensibles o configuraciones como credenciales de acceso a servicios en la nube (por ejemplo, GCP). |
+| `nltk_data/`         | Contiene recursos predescargados de NLTK (como tokenizadores y stopwords) para evitar su descarga dinámica durante la ejecución. |
+
+Una vez definido los archivos y carpetas neceserias para el despliegue, sigue estos pasos para construir la imagen Docker y desplegar la aplicación en **Cloud Run** usando la CLI de `gcloud`:
+
+### Comandos para ejecutar en CMD:
+ - gcloud init
+ - Crea una nueva configuracion y dale un nombre
+ - Selecciona tu cuenta 
+ - Selecciona tu proyecto
+ - gcloud builds submit --tag gcr.io/ia-gen-project/womenapp:latest .
+ - gcloud run deploy womenapp --image gcr.io/ia-gen-project/womenapp:latest --platform managed --region us-west4 --allow-unauthenticated
+
+ESi aparece un error de permisos al desplegar, ejecuta: gcloud auth application-default login
+
+
+
