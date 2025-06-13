@@ -45,8 +45,7 @@ Esta arquitectura permite realizar consultas conversacionales que combinan datos
 
 La arquitectura del sistema combina herramientas de procesamiento de lenguaje natural, almacenamiento en la nube y servicios de despliegue para brindar un **agente conversacional inteligente en tiempo real** que analiza casos de violencia de género en el Perú.
 
-📎 *Ver diagrama de arquitectura:*  
-![Arquitectura del sistema](Imagenes arquitectura/Stack.png)
+![Arquitectura del sistema](Imagenes%20arquitectura/Stack.png)
 
 ### 🧩 Componentes y Flujo
 
