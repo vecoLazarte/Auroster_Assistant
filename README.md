@@ -1,4 +1,4 @@
-# 🟣 Agente Conversacional para la Visibilización de la Violencia de Género en el Perú
+# 🟣 Agente especializado en el análisis exploratorio de  violencia de género en el Perú
 
 ## 📌 Problemática
 
@@ -8,22 +8,72 @@ A nivel global, la situación es alarmante: según la Organización Mundial de l
 
 Esta situación pone en evidencia una urgencia social y política que requiere mecanismos efectivos para visibilizar, comprender y actuar frente a este problema.
 
-Diversos actores están involucrados en la lucha contra la violencia de género: el Estado (a través de ministerios como el MIMP), las organizaciones de la sociedad civil, los medios de comunicación, las instituciones educativas y la ciudadanía en general. Sin embargo, los enfoques tradicionales enfrentan serias limitaciones, como la falta de información sistematizada, la atención inadecuada a las víctimas y la escasa efectividad de las estrategias de prevención.
+Diversos actores están involucrados en la lucha contra la violencia de género: el Estado (a través de ministerios como el MIMP), las organizaciones de la sociedad civil, los medios de comunicación, las instituciones educativas y la ciudadanía en general. Sin embargo, los enfoques tradicionales enfrentan serias limitaciones, como la falta de información sistematizada, la atención inadecuada a las víctimas, falta de acceso ágil a datos relevantes y la dificultad para interpretar datos complejos.
 
 En este contexto, los medios de comunicación, especialmente los digitales, cumplen un rol clave en la construcción del discurso público sobre la violencia de género. La forma en que reportan estos hechos no solo contribuye a visibilizar el problema, sino también a sensibilizar a la sociedad. Sin embargo, a pesar de su importancia, la información que publican rara vez es organizada o utilizada de manera sistemática para el análisis o la toma de decisiones.
 
+Por ello, resulta fundamental complementar estas noticias con datos estructurados provenientes de fuentes oficiales como el INEI, que permiten cuantificar con precisión los casos reportados, identificar tendencias a lo largo del tiempo y segmentar la información por región, tipo de violencia o características sociodemográficas. La combinación de ambos tipos de fuentes —noticias y datos estadísticos oficiales— permite un análisis más completo: las noticias aportan inmediatez, contexto narrativo y cobertura local, mientras que los registros del INEI y otras entidades públicas brindan rigor, trazabilidad y validez estadística. Esta integración favorece una comprensión más profunda y útil para la formulación de políticas públicas, intervenciones focalizadas y estrategias de prevención efectivas.
+
 ## 💡 Solución
 
-Este proyecto propone el desarrollo de un **agente conversacional** que facilite el acceso a información actualizada y contextualizada sobre violencia de género en el Perú, específicamente a partir de noticias digitales previamente recopiladas mediante técnicas de *web scraping*. Aunque el agente no realiza directamente la recolección de datos, se alimenta de una base de conocimiento construida a partir de este proceso inicial, el cual incluyó:
+Este proyecto propone el desarrollo de un **agente conversacional inteligente** orientado al análisis de la **violencia de género en el Perú**. El agente facilita el acceso a información **actualizada y contextualizada**, integrando dos fuentes principales:
 
-- La recopilación de noticias digitales sobre feminicidios y otros tipos de violencia en los distritos de Lima.
-- La definición de metadatos relevantes: título de la noticia, lenguaje, periódico, fecha de publicación, distrito, tipo de violencia, y contenido textual.
-- La identificación de una técnica óptima de fragmentación.
-- La vectorización de los fragmentos y su carga en una base de datos vectorial.
+- **Noticias digitales** recopiladas mediante técnicas de *web scraping*.
+- **Datos estructurados** provenientes del **Instituto Nacional de Estadística e Informática (INEI)**.
 
-Para el almacenamiento y gestión eficiente de la información, se creó una instancia de máquina virtual en **Google Cloud Platform (GCP)** para alojar **Elasticsearch**, que funciona como base vectorial donde se almacenan y consultan los vectores generados. Además, se implementó una instancia de **PostgreSQL** en GCP para guardar el historial de las conversaciones, permitiendo un seguimiento y análisis de las interacciones del usuario con el agente.
+Aunque el agente no realiza directamente la recolección de datos, se alimenta de una **base de conocimiento combinada** que se construyó a través de los siguientes pasos:
 
-### ⚙️ Componentes principales
+### 📌 Proceso de Construcción de la Base de Conocimiento
+
+- 🔎 **Recolección de noticias** digitales sobre feminicidios y otras formas de violencia en los distritos de Lima y departamentos del Perú.
+- 📊 **Incorporación de datos del INEI**, incluyendo estadísticas oficiales sobre denuncias, tipos de violencia y distribución geográfica.
+- 🗂️ **Definición de metadatos clave**: título, periódico, fecha de publicación, distrito, contenido textual, departamento, palabras clave. 
+- ✂️ **Fragmentación optimizada** de los textos para mejorar la comprensión semántica.
+- 🔍 **Vectorización** de los fragmentos y carga en una base de datos vectorial.
+
+### ☁️ Infraestructura en la Nube
+
+- 🧠 Se utilizó **Google Cloud Platform (GCP)** para desplegar dos servicios principales:
+  - **Elasticsearch**: almacena los vectores generados para realizar consultas semánticas.
+  - **PostgreSQL**: almacena el historial de interacciones y los registros estructurados del INEI.
+
+Esta arquitectura permite realizar consultas conversacionales que combinan datos **cualitativos** (narrativas de noticias) y **cuantitativos** (registros oficiales), generando respuestas más completas, visualizaciones dinámicas y análisis más profundos sobre la violencia de género en el país.
+
+### ⚙️ Arquitectura 
+
+#### 🔗 Integración LangGraph con GCP
+
+La arquitectura del sistema combina herramientas de procesamiento de lenguaje natural, almacenamiento en la nube y servicios de despliegue para brindar un **agente conversacional inteligente en tiempo real** que analiza casos de violencia de género en el Perú.
+
+📎 *Ver diagrama de arquitectura:*  
+![Arquitectura del sistema](Imagenes arquitectura/Stack.png)
+
+### 🧩 Componentes y Flujo
+
+#### 👤 Cliente
+- El usuario final accede mediante autenticación con **Google OAuth**.
+- Interactúa con la aplicación desplegada en **Vercel**, que sirve como capa de presentación.
+
+#### ☁️ Aplicación principal
+- **App-Violencia (Cloud Run)**: Microservicio que recibe las consultas del usuario, coordina las herramientas del backend y entrega respuestas.
+- Desplegado en Google Cloud, permite escalabilidad automática y ejecución segura.
+
+#### 🧠 Asistente conversacional
+- **ChatGPT** y **LangSmith** gestionan el flujo de conversación usando **LangGraph**, manteniendo una memoria de corto plazo por sesión (short-memory).
+- Se ejecutan evaluaciones, seguimiento del estado del diálogo y enrutamiento de herramientas según el tipo de pregunta.
+
+#### 🛠️ Herramientas conectadas
+
+- 🔎 **RAG (ElasticSearch)**: Base de datos vectorial que permite búsquedas semánticas en noticias sobre violencia de género.
+- 📊 **ReportesPostgreSQL (Cloud SQL)**: Contiene los registros estructurados provenientes del INEI y otras fuentes oficiales.
+- 📈 **GraficosEstadisticos (Cloud Storage)**: Servicio que genera y almacena gráficos dinámicos en tiempo real, los cuales son devueltos al usuario según su consulta.
+
+
+Esta integración permite que cada sesión de usuario se ejecute en tiempo real, combinando procesamiento de lenguaje, recuperación aumentada (RAG), consulta estructurada con SQL y generación visual, todo en una arquitectura serverless sobre Google Cloud Platform.
+
+
+
+
 
 El agente opera empleando dos herramientas fundamentales:
 
@@ -33,6 +83,29 @@ El agente opera empleando dos herramientas fundamentales:
 > ⚠️ El agente **no genera información desde cero**, sino que se apoya en noticias reales previamente procesadas, lo que garantiza que las respuestas estén ancladas en evidencia concreta.
 
 Finalmente, el sistema se despliega en **Vercel**, donde puede ser accedido por usuarios con dominio `@alum.up.edu.pe`, facilitando su uso académico o institucional.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 🗂️ Flujo Conversacional
 
