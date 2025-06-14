@@ -130,12 +130,12 @@ ESi aparece un error de permisos al desplegar, ejecuta: gcloud auth application-
 
 ## Resultados
 
-![Ejemplo1](Img ejemplos/Ejemplo 1.png)  
-![Ejemplo2](Img ejemplos/Ejemplo 2.png)  
-![Ejemplo3](Img ejemplos/Ejemplo 3.png)  
-![Ejemplo4](Img ejemplos/Ejemplo 4.png)  
-![Ejemplo5](Img ejemplos/Ejemplo 5_1.png)  
-![Ejemplo6](Img ejemplos/Ejemplo 5_2.png)  
-![Ejemplo7](Img ejemplos/Ejemplo 6_1.png)  
-![Ejemplo8](Img ejemplos/Ejemplo 6_2.png)
+![Ejemplo1](Img%20ejemplos/Ejemplo%201.png)  
+![Ejemplo2](Img%20ejemplos/Ejemplo%202.png)  
+![Ejemplo3](Img%20ejemplos/Ejemplo%203.png)  
+![Ejemplo4](Img%20ejemplos/Ejemplo%204.png)  
+![Ejemplo5](Img%20ejemplos/Ejemplo%205_1.png)  
+![Ejemplo6](Img%20ejemplos/Ejemplo%205_2.png)  
+![Ejemplo7](Img%20ejemplos/Ejemplo%206_1.png)  
+![Ejemplo8](Img%20ejemplos/Ejemplo%206_2.png)
 
